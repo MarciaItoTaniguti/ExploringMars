@@ -1,4 +1,4 @@
-package elo7.marcia.challenge.controller;
+package elo7.marcia.challenge.rest;
 
 import org.springframework.web.bind.annotation.*;
 

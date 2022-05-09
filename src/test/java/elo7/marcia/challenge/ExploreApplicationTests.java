@@ -1,14 +1,34 @@
 package elo7.marcia.challenge;
 
+import elo7.marcia.challenge.instruction.CoordinatePoint;
+import elo7.marcia.challenge.instruction.CoordinatePointOnMatrix;
+import elo7.marcia.challenge.instruction.WindRose;
+import elo7.marcia.challenge.model.MarsPlain;
+import elo7.marcia.challenge.model.Probe;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@SpringBootTest
+
 class ExploreApplicationTests {
-
 	@Test
-	void contextLoads() {
+	void deployProbeFirst() {
+		CoordinatePoint highestCoordinatePoint = new CoordinatePointOnMatrix(5,5);
+		MarsPlain mars = new MarsPlain(highestCoordinatePoint);
+		Probe probe = ProbeBuilder.generateProbeOne();
+		probe.runInstructions(ProbeBuilder.getInstructionForProbeOne(), mars);
 
+		assertEquals(new CoordinatePointOnMatrix(5, 1), probe.getCurrentLocation());
+		assertEquals(WindRose.EAST, probe.getPointsTo());
 	}
 
+	@Test
+	void deployProbeSecond() {
+		CoordinatePoint highestCoordinatePoint = new CoordinatePointOnMatrix(5,5);
+		MarsPlain mars = new MarsPlain(highestCoordinatePoint);
+		Probe probe = ProbeBuilder.generateProbeTwo();
+		probe.runInstructions(ProbeBuilder.getInstructionForProbeTwo(), mars);
+
+		assertEquals(new CoordinatePointOnMatrix(1,3), probe.getCurrentLocation());
+		assertEquals(WindRose.NORTH, probe.getPointsTo());
+	}
 }
