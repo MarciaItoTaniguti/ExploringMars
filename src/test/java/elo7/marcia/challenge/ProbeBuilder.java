@@ -1,9 +1,9 @@
 package elo7.marcia.challenge;
 
-import elo7.marcia.challenge.instruction.CoordinatePoint;
-import elo7.marcia.challenge.instruction.CoordinatePointOnMatrix;
-import elo7.marcia.challenge.instruction.MovementOptions;
-import elo7.marcia.challenge.instruction.WindRose;
+import elo7.marcia.challenge.model.CoordinatePoint;
+import elo7.marcia.challenge.model.CoordinatePointOnMatrix;
+import elo7.marcia.challenge.model.MovementOptions;
+import elo7.marcia.challenge.model.WindRose;
 import elo7.marcia.challenge.model.Probe;
 
 import java.util.ArrayList;

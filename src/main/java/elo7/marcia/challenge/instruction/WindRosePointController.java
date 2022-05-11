@@ -1,6 +1,6 @@
 package elo7.marcia.challenge.instruction;
 
-import elo7.marcia.challenge.instruction.WindRose;
+import elo7.marcia.challenge.model.WindRose;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;

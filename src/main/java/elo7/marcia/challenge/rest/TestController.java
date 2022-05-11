@@ -2,6 +2,9 @@ package elo7.marcia.challenge.rest;
 
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @RestController
 @RequestMapping("/test")
 public class TestController {
@@ -16,8 +19,9 @@ public class TestController {
         return message;
     }
 
-    @PostMapping("/")
-    public @ResponseBody String postTest2(@RequestBody String message) {
+    @PostMapping("/explore/mars")
+    public @ResponseBody String exploreMars(@RequestBody String message) {
+        List<String> lines = new ArrayList<>();
         return message;
     }
 

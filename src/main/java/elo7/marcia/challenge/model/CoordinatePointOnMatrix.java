@@ -1,6 +1,8 @@
-package elo7.marcia.challenge.instruction;
+package elo7.marcia.challenge.model;
 
-public class CoordinatePointOnMatrix extends CoordinatePoint{
+import elo7.marcia.challenge.model.CoordinatePoint;
+
+public class CoordinatePointOnMatrix extends CoordinatePoint {
 
     public CoordinatePointOnMatrix(int x, int y) {
         super(x, y);

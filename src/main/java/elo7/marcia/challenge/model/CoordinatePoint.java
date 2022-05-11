@@ -1,6 +1,7 @@
-package elo7.marcia.challenge.instruction;
+package elo7.marcia.challenge.model;
 
 import java.util.Objects;
+import java.lang.Object;
 
 public class CoordinatePoint {
     private int x;

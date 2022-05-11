@@ -1,4 +1,4 @@
-package elo7.marcia.challenge.instruction;
+package elo7.marcia.challenge.model;
 
 public enum WindRose {
     NORTH('N'), EAST('E'), SOUTH('S'), WEST('W');

@@ -1,4 +1,4 @@
-package elo7.marcia.challenge.instruction;
+package elo7.marcia.challenge.model;
 
 public enum MovementOptions {
     TURN_RIGHT('R'), TURN_LEFT('L'), MOVE('M');
