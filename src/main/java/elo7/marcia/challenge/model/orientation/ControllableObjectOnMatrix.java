@@ -16,6 +16,7 @@ public class ControllableObjectOnMatrix extends MovableObjectOnMatrix implements
         setCurrentDirection(startAt);
     }
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     public int getLastIndex() {
         return direction.size()-1;
     }
