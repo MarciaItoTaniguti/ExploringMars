@@ -1,4 +1,4 @@
-package elo7.marcia.challenge.model;
+package elo7.marcia.challenge.model.orientation;
 
 import java.util.Objects;
 import java.lang.Object;

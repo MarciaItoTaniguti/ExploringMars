@@ -1,6 +1,6 @@
-package elo7.marcia.challenge.model;
+package elo7.marcia.challenge.model.orientation;
 
-public class MovableMatrixObject extends MatrixObject {
+public class MovableObjectOnMatrix extends ObjectOnMatrix {
 
     protected void moveUp() {
         location.setY(location.getY()+1);

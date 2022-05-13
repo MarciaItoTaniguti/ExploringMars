@@ -1,30 +1,42 @@
 package elo7.marcia.challenge.model;
 
-import elo7.marcia.challenge.instruction.*;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import elo7.marcia.challenge.model.orientation.ControllableObjectOnMatrix;
+import elo7.marcia.challenge.model.orientation.CoordinatePoint;
+import elo7.marcia.challenge.model.orientation.MovementOptions;
+import elo7.marcia.challenge.model.orientation.WindRose;
+import elo7.marcia.challenge.model.planet.MarsSurface;
+
 import java.util.List;
 
-public class Probe extends ControllableMatrixObject implements MoveOnMatrix{
-    private WindRose pointsTo;
+public class Probe extends ControllableObjectOnMatrix {
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private final List<MovementOptions> instructions;
 
-    public Probe(CoordinatePoint deployLocation, WindRose pointsTo) {
+    public Probe(CoordinatePoint deployLocation, WindRose pointsTo, List<MovementOptions> instructions) {
+        super(pointsTo);
+        this.instructions = instructions;
         setLocation(deployLocation);
-        setPointsTo(pointsTo);
     }
 
-    @Override
-    public void runInstructions(List<MovementOptions> instructions, MarsPlain mars) {
-        WindRosePointController windRoseController = new WindRosePointController(pointsTo);
+    public void runInstructions(MarsSurface mars) {
         for (MovementOptions currMovement:instructions) {
-            MovementController movementController = new MovementController(currMovement);
-            pointsTo = movementController.executeOneMovement(windRoseController, location);
+            Probe lastProbe = new Probe(new CoordinatePoint(this.getLocation().getX(), this.getLocation().getY()), this.getCurrentDirection(), this.getInstructions());
+            if (currMovement.isMoveForward()) {
+                this.move();
+            } else {
+                updateDirection(currMovement);
+            }
+            try {
+                mars.updateProbeOnMatrix(this, lastProbe);
+            } catch (Exception e) {
+                this.setLocation(lastProbe.getLocation());
+                return;
+            }
         }
     }
 
-    public WindRose getPointsTo() {
-        return pointsTo;
-    }
-
-    public void setPointsTo(WindRose pointsTo) {
-        this.pointsTo = pointsTo;
+    public List<MovementOptions> getInstructions() {
+        return instructions;
     }
 }
