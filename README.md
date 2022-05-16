@@ -3,53 +3,45 @@ Following payload can be used as a template request:
 
 ```json
 {
-   "mars": {
-      "x": 5,
-      "y": 5
-   },
-   "probeList": [
-      {
-         "instructions": [ "L", "M", "M", "L", "M", "L","M" ],
-         "location": {
-             "x": 2,
-             "y": 1
-          },
-          "currentDirection": "E"
-      },
-      {
-         "instructions": ["M", "R", "R", "M", "M", "L", "M" ],
-         "location": {
-            "x": 0,
-            "y": 3
-         },
-         "currentDirection": "E"
-      }
-   ]
+  "mars": {
+    "borderX": 5,
+    "borderY": 5
+  },
+  "probes": [
+    {
+      "locationX": 1,
+      "locationY": 2,
+      "direction": "N",
+      "instructions": "LMLMLMLMM"
+    },
+    {
+      "locationX": 3,
+      "locationY": 3,
+      "direction": "E",
+      "instructions": "MMRMMRMRRM"
+    }
+  ]
 }
 ```
 
 Using the given request, output will be: 
 ```json
 {
-   "mars": {
-      "x": 5,
-      "y": 5
-   },
-   "probeList": [
-      {
-         "location": {
-            "x": 1,
-            "y": 2
-         },
-         "currentDirection": "S"
-      },
-      {
-         "location": {
-            "x": 0,
-            "y": 3
-         },
-         "currentDirection": "W"
-      }
-   ]
+  "mars": {
+    "borderX": 5,
+    "borderY": 5
+  },
+  "probes": [
+    {
+      "locationX": 1,
+      "locationY": 3,
+      "direction": "N"
+    },
+    {
+      "locationX": 5,
+      "locationY": 1,
+      "direction": "E"
+    }
+  ]
 }
 ```
