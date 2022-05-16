@@ -1,136 +1,118 @@
 package elo7.marcia.challenge;
 
 import elo7.marcia.challenge.model.*;
-import elo7.marcia.challenge.model.orientation.CoordinatePoint;
-import elo7.marcia.challenge.model.orientation.MovementOptions;
-import elo7.marcia.challenge.model.orientation.WindRose;
-import elo7.marcia.challenge.model.planet.MarsSurface;
-import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Test;
-import java.util.ArrayList;
-import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
-
 
 class ExploreApplicationTest {
 
 	@Test
 	void deployProbeFirst() throws Exception {
-		CoordinatePoint highestCoordinatePoint = new CoordinatePoint(5,5);
-		MarsSurface mars = new MarsSurface(highestCoordinatePoint);
-		List<MovementOptions> exploreInstructions = new ArrayList<>();
-		exploreInstructions.add(MovementOptions.MOVE);
-		exploreInstructions.add(MovementOptions.MOVE);
-		exploreInstructions.add(MovementOptions.TURN_RIGHT);
-		exploreInstructions.add(MovementOptions.MOVE);
-		exploreInstructions.add(MovementOptions.MOVE);
-		exploreInstructions.add(MovementOptions.TURN_RIGHT);
-		exploreInstructions.add(MovementOptions.MOVE);
-		exploreInstructions.add(MovementOptions.TURN_RIGHT);
-		exploreInstructions.add(MovementOptions.TURN_RIGHT);
-		exploreInstructions.add(MovementOptions.MOVE);
-		Probe probe = new Probe(new CoordinatePoint(3,3), WindRose.EAST, exploreInstructions);
-		mars.deployProbe(probe);
-		probe.runInstructions(mars);
+		Planet mars = new Planet(5,5);
 
-		assertEquals(new CoordinatePoint(5, 1), probe.getLocation());
-		assertEquals(WindRose.EAST, probe.getCurrentDirection());
+		String instructions = "MRMMLM";
+		Probe probe = new Probe();
+		DeployOnPlanet.execute(new Location(1,2,Direction.N), probe, mars);
+		probe.runInstructions(instructions, mars);
+
+		assertNotNull(mars.getObjects().get(new Location(3,4, Direction.N)));
 	}
 
 	@Test
 	void deployProbeSecond() throws Exception {
-		MarsSurface mars = new MarsSurface(new CoordinatePoint(5,5));
+        Planet mars = new Planet(5,5);
 
-		List<MovementOptions> instruction = Lists.newArrayList(MovementOptions.MOVE, MovementOptions.TURN_RIGHT,MovementOptions.MOVE,MovementOptions.MOVE, MovementOptions.TURN_LEFT, MovementOptions.MOVE);
+		Probe probe = new Probe();
+		DeployOnPlanet.execute(new Location(3,3,Direction.E), probe, mars);
+		String instructions = "MMRMMRMRRM";
+		probe.runInstructions(instructions, mars);
 
-		Probe probe = new Probe(new CoordinatePoint(1,2), WindRose.NORTH,instruction);
-		mars.deployProbe(probe);
-		probe.runInstructions(mars);
-
-		assertEquals(new CoordinatePoint(3,4), probe.getLocation());
-		assertEquals(WindRose.NORTH, probe.getCurrentDirection());
+		assertNotNull(mars.getObjects().get(new Location(5,1, Direction.E)));
 	}
 
 	@Test
 	void deploySecondProbeCollide() throws Exception {
-		MarsSurface mars = new MarsSurface(new CoordinatePoint(5,5));
+		Planet mars = new Planet(5,5);
 
-		List<MovementOptions> instructions = Lists.newArrayList(MovementOptions.TURN_LEFT,MovementOptions.MOVE,MovementOptions.MOVE,MovementOptions.TURN_LEFT,MovementOptions.MOVE,MovementOptions.TURN_LEFT,MovementOptions.MOVE);
-		Probe probeOne = new Probe(new CoordinatePoint(2,1), WindRose.EAST, instructions);
-		mars.deployProbe(probeOne);
-		probeOne.runInstructions(mars);
+		String instructions = "LMMLMLM";
+		Probe probe = new Probe();
+		DeployOnPlanet.execute(new Location(2,1,Direction.E), probe, mars);
+		probe.runInstructions(instructions, mars);
 
-		assertEquals(new CoordinatePoint(1,2), probeOne.getLocation());
-		assertEquals(WindRose.SOUTH, probeOne.getCurrentDirection());
+		assertNotNull(mars.getObjects().get(new Location(1,2, Direction.S)));
 
-		Probe probeTwo = new Probe(new CoordinatePoint(1,2), WindRose.NORTH, null);
+		Probe probe2 = new Probe();
+
 		Exception exception = assertThrows(
 				Exception.class,
-				() -> mars.deployProbe(probeTwo));
+				() -> DeployOnPlanet.execute(new Location(1,2,Direction.N), probe2, mars));
 
-
-		assertTrue(exception.getMessage().contains(MarsSurface.LOCALE_NOT_AVAILABLE));
+		assertTrue(exception.getMessage().contains(DeployOnPlanet.INVALID_LOCALE));
 	}
 
 	@Test
 	void deployProbeCollisionOnMove() throws Exception {
-		CoordinatePoint highestCoordinatePoint = new CoordinatePoint(5,5);
-		MarsSurface mars = new MarsSurface(highestCoordinatePoint);
+		Planet mars = new Planet(5,5);
 
-		List<MovementOptions> instructions = Lists.newArrayList(MovementOptions.TURN_LEFT, MovementOptions.MOVE, MovementOptions.MOVE, MovementOptions.TURN_LEFT, MovementOptions.MOVE, MovementOptions.TURN_LEFT,MovementOptions.MOVE);
-		Probe probeOne = new Probe(new CoordinatePoint(2,1), WindRose.EAST, instructions);
-		mars.deployProbe(probeOne);
-		probeOne.runInstructions(mars);
+		String instructions = "LMMLMLM";
+		Probe probe = new Probe();
+		DeployOnPlanet.execute(new Location(2,1,Direction.E), probe, mars);
+		probe.runInstructions(instructions, mars);
 
-		assertEquals(new CoordinatePoint(1,2), probeOne.getLocation());
-		assertEquals(WindRose.SOUTH, probeOne.getCurrentDirection());
+		assertNotNull(mars.getObjects().get(new Location(1,2, Direction.S)));
 
-		List<MovementOptions> instProb2 = Lists.newArrayList(MovementOptions.MOVE, MovementOptions.TURN_RIGHT, MovementOptions.MOVE, MovementOptions.MOVE, MovementOptions.TURN_LEFT, MovementOptions.MOVE);
-		Probe probeTwo = new Probe(new CoordinatePoint(0,3), WindRose.EAST,instProb2);
-		mars.deployProbe(probeTwo);
-		probeTwo.runInstructions(mars);
-		assertEquals(new CoordinatePoint(1,3), probeTwo.getLocation());
-		assertEquals(WindRose.SOUTH, probeTwo.getCurrentDirection());
+		Probe probe2 = new Probe();
+		DeployOnPlanet.execute(new Location(0,3,Direction.E), probe2, mars);
+		String instructions2 = "MRMMLM";
+		probe2.runInstructions(instructions2, mars);
+
+		assertNotNull(mars.getObjects().get(new Location(1,3, Direction.S)));
 	}
 
 	@Test
-	void deployProbeOutOfBordLimit() {
-		CoordinatePoint highestCoordinatePoint = new CoordinatePoint(5,5);
-		MarsSurface mars = new MarsSurface(highestCoordinatePoint);
-
-		Probe probe = new Probe(new CoordinatePoint(6,6), WindRose.NORTH, null);
-
+	void deployProbeOutOfBordLimit() throws Exception {
+		Planet mars = new Planet(5,5);
+		Probe probe = new Probe();
 		Exception exception = assertThrows(
 				Exception.class,
-				() -> mars.deployProbe(probe));
+				() -> DeployOnPlanet.execute(new Location(6,6,Direction.N), probe, mars));
 
-		assertTrue(exception.getMessage().contains(MarsSurface.LOCALE_NOT_AVAILABLE));
+		assertTrue(exception.getMessage().contains(DeployOnPlanet.INVALID_LOCALE));
+	}
+
+	@Test
+	void deployProbeOutOfBordLimitSec() throws Exception {
+		Planet mars = new Planet(5,5);
+		Probe probe = new Probe();
+		Exception exception = assertThrows(
+				Exception.class,
+				() -> DeployOnPlanet.execute(new Location(-3,2,Direction.N), probe, mars));
+
+		assertTrue(exception.getMessage().contains(DeployOnPlanet.INVALID_LOCALE));
 	}
 
 	@Test
 	void MoveProbeOutOfBordLimit() throws Exception {
-		CoordinatePoint highestCoordinatePoint = new CoordinatePoint(5,5);
-		MarsSurface mars = new MarsSurface(highestCoordinatePoint);
+		Planet mars = new Planet(5,5);
 
-		List<MovementOptions> instProb = Lists.newArrayList(MovementOptions.MOVE,MovementOptions.TURN_RIGHT,MovementOptions.MOVE,MovementOptions.MOVE,MovementOptions.TURN_RIGHT,MovementOptions.TURN_RIGHT,MovementOptions.TURN_LEFT);
-		Probe probe = new Probe(new CoordinatePoint(4,0), WindRose.NORTH,instProb);
-		mars.deployProbe(probe);
-		probe.runInstructions(mars);
-		assertEquals(new CoordinatePoint(5,1), probe.getLocation());
-		assertEquals(WindRose.EAST, probe.getCurrentDirection());
+		String instructions = "LLMRMMRRL";
+		Probe probe = new Probe();
+		DeployOnPlanet.execute(new Location(4,0,Direction.S), probe, mars);
+		probe.runInstructions(instructions, mars);
+
+		assertNotNull(mars.getObjects().get(new Location(5,1, Direction.E)));
 	}
 
 	@Test
 	void MoveProbeOutOfBordLimitSec() throws Exception {
-		CoordinatePoint highestCoordinatePoint = new CoordinatePoint(5,5);
-		MarsSurface mars = new MarsSurface(highestCoordinatePoint);
+		Planet mars = new Planet(5,5);
 
-		List<MovementOptions> instProb = Lists.newArrayList(MovementOptions.MOVE,MovementOptions.TURN_RIGHT,MovementOptions.TURN_RIGHT,MovementOptions.MOVE,MovementOptions.MOVE,MovementOptions.TURN_LEFT,MovementOptions.MOVE);
-		Probe probe = new Probe(new CoordinatePoint(0,3), WindRose.EAST,instProb);
-		mars.deployProbe(probe);
-		probe.runInstructions(mars);
-		assertEquals(new CoordinatePoint(0,3), probe.getLocation());
-		assertEquals(WindRose.WEST, probe.getCurrentDirection());
+		String instructions = "MRRMMLM";
+		Probe probe = new Probe();
+		DeployOnPlanet.execute(new Location(0,3,Direction.E), probe, mars);
+		probe.runInstructions(instructions, mars);
+
+		assertNotNull(mars.getObjects().get(new Location(0,3, Direction.W)));
 	}
 
 }
