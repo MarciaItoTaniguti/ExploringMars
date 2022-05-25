@@ -34,8 +34,8 @@ public class MarsProbeController {
         request.getProbes().forEach(probeRequest -> {
             Location location = new Location(probeRequest.getLocationX(), probeRequest.getLocationY(), probeRequest.getDirection());
             try {
-                Probe probe = new Probe();
-                DeployOnPlanet.execute(location, probe, mars);
+                Probe probe = new Probe(location);
+                probe.deploy(mars);
                 probe.runInstructions(probeRequest.getInstructions(), mars);
             } catch (Exception e) {
                 throw new RuntimeException(e.getLocalizedMessage());
@@ -52,11 +52,11 @@ public class MarsProbeController {
         response.setMars(marsResponse);
 
         List<ExploreMarsProbe> probesResponse = new ArrayList<>();
-        mars.getObjects().forEach((key, value) -> {
+        mars.getMovableList().forEach(movable -> {
             ExploreMarsProbe probeResponse = new ExploreMarsProbe();
-            probeResponse.setDirection(key.getDirection());
-            probeResponse.setLocationX(key.getX());
-            probeResponse.setLocationY(key.getY());
+            probeResponse.setDirection(movable.getLocation().getDirection());
+            probeResponse.setLocationX(movable.getLocation().getX());
+            probeResponse.setLocationY(movable.getLocation().getY());
             probesResponse.add(probeResponse);
         });
         response.setProbes(probesResponse);

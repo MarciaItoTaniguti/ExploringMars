@@ -8,28 +8,17 @@ public class Location {
     private Direction direction;
 
     public Location(int x, int y) {
-        this.x = x;
-        this.y = y;
+        setX(x);
+        setY(y);
     }
     public Location(int x, int y, Direction direction) {
-        this.x = x;
-        this.y = y;
+        this(x, y);
         this.direction = direction;
     }
 
     @Override
-    public String toString() {
-        return "Location{" +
-                "x=" + x +
-                ", y=" + y +
-                ", direction=" + direction +
-                '}';
-    }
-
-    @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof Location)) return false;
         Location location = (Location) o;
         return x == location.x && y == location.y;
     }
@@ -61,5 +50,9 @@ public class Location {
 
     public void setDirection(Direction direction) {
         this.direction = direction;
+    }
+
+    protected Location clone() {
+        return new Location(this.getX(), this.getY(), this.getDirection());
     }
 }

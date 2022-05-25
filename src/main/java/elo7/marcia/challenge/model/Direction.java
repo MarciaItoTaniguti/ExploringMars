@@ -11,8 +11,8 @@ public enum Direction {
             return Direction.W;
         }
         @Override
-        protected void move(Planet planet, Object object) throws Exception {
-            MoveObject.moveUp(planet, object);
+        protected void moveForward(Planet mars, Movable movable) throws Exception {
+            movable.moveObjectUp(mars);
         }
     },
     E {
@@ -25,8 +25,8 @@ public enum Direction {
             return Direction.N;
         }
         @Override
-        protected void move(Planet planet, Object object) throws Exception {
-            MoveObject.moveRight(planet, object);
+        protected void moveForward(Planet mars, Movable movable) throws Exception {
+            movable.moveObjectRight(mars);
         }
     },
     S {
@@ -39,8 +39,8 @@ public enum Direction {
             return Direction.E;
         }
         @Override
-        protected void move(Planet planet, Object object) throws Exception {
-            MoveObject.moveDown(planet, object);
+        protected void moveForward(Planet mars, Movable movable) throws Exception {
+            movable.moveObjectDown(mars);
         }
     },
     W {
@@ -53,12 +53,12 @@ public enum Direction {
             return Direction.S;
         }
         @Override
-        protected void move(Planet planet, Object object) throws Exception {
-            MoveObject.moveLeft(planet, object);
+        protected void moveForward(Planet mars, Movable movable) throws Exception {
+            movable.moveObjectLeft(mars);
         }
     };
 
     protected abstract Direction right();
     protected abstract Direction left();
-    protected abstract void move(Planet planet, Object object) throws Exception;
+    protected abstract void moveForward(Planet mars, Movable movable) throws Exception;
 }

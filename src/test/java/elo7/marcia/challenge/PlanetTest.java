@@ -2,163 +2,42 @@ package elo7.marcia.challenge;
 
 import elo7.marcia.challenge.model.*;
 import org.junit.jupiter.api.Test;
-
+import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class PlanetTest {
     @Test
-    void executeTestFail() {
-        Exception exception = assertThrows(
-                Exception.class,
-                () -> new Planet(-3,3));
+    void addMovableSuccess() throws Exception {
+        Planet mars = new Planet(5,5);
 
-        assertTrue(exception.getMessage().contains(Planet.INVALID_BORD));
+        Location locationProbe1 = new Location(1,2, Direction.N);
+        Probe probe = new Probe(locationProbe1);
+        probe.deploy(mars);
+        Location locationProbe2 = new Location(1,3, Direction.N);
+        Probe probe2 = new Probe(locationProbe2);
+        probe2.deploy(mars);
+
+        List<Movable> marsProbes = mars.getMovableList();
+        assertEquals(new Probe(locationProbe1), marsProbes.get(0));
+        assertEquals(new Probe(locationProbe2), marsProbes.get(1));
     }
 
     @Test
-    void moveObjectUpTestSuccess() throws Exception {
-        Probe probe = new Probe();
-        Planet planet = new Planet(3,3);
-        Location location = new Location(0,0);
-        planet.addObject(location, probe);
-        planet.moveObjectUp(probe);
+    void addMovableFail() throws Exception {
+        Planet mars = new Planet(5,5);
 
-        assertNotNull(planet.getObjects().get(new Location(0,1)));
-    }
-
-    @Test
-    void moveObjectUpTestFail() throws Exception {
-        Probe probe = new Probe();
-        Planet planet = new Planet(3,3);
-        Location location = new Location(3,3);
-        planet.addObject(location, probe);
+        Probe probe = new Probe(new Location(1,2, Direction.N));
+        probe.deploy(mars);
+        Probe probe2 = new Probe(new Location(1,2, Direction.S));
 
         Exception exception = assertThrows(
                 Exception.class,
-                () -> planet.moveObjectUp(probe));
+                () ->  probe2.deploy(mars));
 
-        assertTrue(exception.getMessage().contains(Planet.OUT_OF_BORD));
-    }
-
-    @Test
-    void moveObjectDownTestSuccess() throws Exception {
-        Probe probe = new Probe();
-        Planet planet = new Planet(3,3);
-        Location location = new Location(0,1);
-        planet.addObject(location, probe);
-        planet.moveObjectDown(probe);
-
-        assertNotNull(planet.getObjects().get(new Location(0,0)));
-    }
-
-    @Test
-    void moveObjectDownTestFail() throws Exception {
-        Probe probe = new Probe();
-        Planet planet = new Planet(3,3);
-        Location location = new Location(0,0);
-        planet.addObject(location, probe);
-
-        Exception exception = assertThrows(
-                Exception.class,
-                () -> planet.moveObjectDown(probe));
-
-        assertTrue(exception.getMessage().contains(Planet.OUT_OF_BORD));
-    }
-
-    @Test
-    void moveObjectRightTestSuccess() throws Exception {
-        Probe probe = new Probe();
-        Planet planet = new Planet(3,3);
-        Location location = new Location(0,0);
-        planet.addObject(location, probe);
-        planet.moveObjectRight(probe);
-
-        assertNotNull(planet.getObjects().get(new Location(1,0)));
-    }
-
-    @Test
-    void moveObjectRightTestFail() throws Exception {
-        Probe probe = new Probe();
-        Planet planet = new Planet(3,3);
-        Location location = new Location(3,3);
-        planet.addObject(location, probe);
-
-        Exception exception = assertThrows(
-                Exception.class,
-                () -> planet.moveObjectRight(probe));
-
-        assertTrue(exception.getMessage().contains(Planet.OUT_OF_BORD));
-    }
-
-    @Test
-    void moveObjectLeftTestSuccess() throws Exception {
-        Probe probe = new Probe();
-        Planet planet = new Planet(3,3);
-        Location location = new Location(1,0);
-        planet.addObject(location, probe);
-        planet.moveObjectLeft(probe);
-
-        assertNotNull(planet.getObjects().get(new Location(0,0)));
-    }
-
-    @Test
-    void moveObjectLeftTestFail() throws Exception {
-        Probe probe = new Probe();
-        Planet planet = new Planet(3,3);
-        Location location = new Location(0,0);
-        planet.addObject(location, probe);
-
-        Exception exception = assertThrows(
-                Exception.class,
-                () -> planet.moveObjectLeft(probe));
-
-        assertTrue(exception.getMessage().contains(Planet.OUT_OF_BORD));
-    }
-
-    @Test
-    void turnRightTest() throws Exception {
-        Probe probe = new Probe();
-        Planet planet = new Planet(3,3);
-        Location location = new Location(1,0, Direction.E);
-        planet.addObject(location, probe);
-        planet.turnRight(probe);
-
-        assertNotNull(planet.getObjects().get(new Location(1,0, Direction.S)));
-    }
-
-    @Test
-    void turnLeftTest() throws Exception {
-        Probe probe = new Probe();
-        Planet planet = new Planet(3,3);
-        Location location = new Location(1,0, Direction.S);
-        planet.addObject(location, probe);
-        planet.turnLeft(probe);
-
-        assertNotNull(planet.getObjects().get(new Location(1,0, Direction.W)));
-    }
-
-    @Test
-    void moveForwardTestSuccess() throws Exception {
-        Probe probe = new Probe();
-        Planet planet = new Planet(3,3);
-        Location location = new Location(0,1, Direction.S);
-        planet.addObject(location, probe);
-        planet.moveForward(probe);
-
-        assertNotNull(planet.getObjects().get(new Location(0,0, Direction.S)));
-    }
-
-    @Test
-    void moveForwardTestFail() throws Exception {
-        Probe probe = new Probe();
-        Planet planet = new Planet(3,3);
-        Location location = new Location(0,0, Direction.S);
-        planet.addObject(location, probe);
-
-        Exception exception = assertThrows(
-                Exception.class,
-                () -> planet.moveForward(probe));
-
-        assertTrue(exception.getMessage().contains(Planet.OUT_OF_BORD));
+        assertTrue(exception.getMessage().contains(Planet.INVALID_LOCALE));
+        List<Movable> marsProbes = mars.getMovableList();
+        assertEquals(1, marsProbes.size());
+        Location locationResult = new Location(1,2, Direction.N);
+        assertEquals(new Probe(locationResult), marsProbes.get(0));
     }
 }
